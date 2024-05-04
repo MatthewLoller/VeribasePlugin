@@ -39,7 +39,7 @@ dependencies {
     }
 }
 
-group = "dinkplugin"
+group = "veribaseplugin"
 version = "1.10.0"
 
 tasks.withType<JavaCompile> {
@@ -69,7 +69,7 @@ tasks.withType<AbstractArchiveTask>().configureEach {
 tasks.register(name = "shadowJar", type = Jar::class) {
     dependsOn(configurations.testRuntimeClasspath)
     manifest {
-        attributes(mapOf("Main-Class" to "dinkplugin.DinkTest"))
+        attributes(mapOf("Main-Class" to "veribaseplugin.VeribaseTest"))
     }
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

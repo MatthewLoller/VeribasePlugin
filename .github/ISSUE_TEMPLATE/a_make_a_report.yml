@@ -9,10 +9,10 @@ body:
       label: Checklist
       description: null
       options:
-        - label: I'm reporting a problem with Dink
+        - label: I'm reporting a problem with Veribase
           required: true
         - label: I've searched the [issues and pull
-            requests](https://github.com/pajlads/Dinkplugin/issues?q=) for
+            requests](https://github.com/pajlads/Veribaseplugin/issues?q=) for
             similar looking reports
           required: true
 
@@ -69,7 +69,7 @@ body:
       label: Runelite Version
       description: >
         󠀀
-        ![runelite_version_information](https://github.com/Felanbird/DinkPlugin/assets/41973452/2952a3c6-2f1f-46fe-908d-95598f2d4587)
+        ![runelite_version_information](https://github.com/Felanbird/VeribasePlugin/assets/41973452/2952a3c6-2f1f-46fe-908d-95598f2d4587)
 
         The Runelite version can be found by clicking the ⓘ icon on the sidebar.
       placeholder: "Runelite version: 1.10.14.3"

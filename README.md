@@ -1,11 +1,11 @@
-# Dink
+# Veribase
 
-Dink sends webhook messages upon noteworthy in-game events.
-While Dink supports the Discord webhook format (with rich embeds and optional screenshots), it also includes additional metadata that allows custom webhook servers to analyze messages or even generate their own messages.
+Veribase sends webhook messages upon noteworthy in-game events.
+While Veribase supports the Discord webhook format (with rich embeds and optional screenshots), it also includes additional metadata that allows custom webhook servers to analyze messages or even generate their own messages.
 Examples of the additional metadata can be found [here](docs/json-examples.md).
 This project was forked from UniversalDiscordNotifier, but has more features, reliability, configurability, testing, and maintainer activity.
 
-Have a suggestion (e.g., new notifier, additional data), bug report (as rare as it may be), or question? Let us know on our [issue tracker](https://github.com/pajlads/DinkPlugin/issues)!
+Have a suggestion (e.g., new notifier, additional data), bug report (as rare as it may be), or question? Let us know on our [issue tracker](https://github.com/pajlads/VeribasePlugin/issues)!
 
 ## Basic Setup
 
@@ -15,7 +15,7 @@ To use this plugin, a webhook URL is required; you can obtain one from Discord w
 1. Click the server name (at the top-left of your screen) and select `Server Settings`.
 2. Select the `Integrations` tab on the left side and click `Create Webhook` (if other webhooks already exist, click `View Webhooks` and `New Webhook`).
 3. Click the newly created webhook, select the target Discord channel, and click `Copy Webhook URL`.
-4. Paste the copied link into the `Primary Webhook URLs` box in the Dink plugin settings.
+4. Paste the copied link into the `Primary Webhook URLs` box in the Veribase plugin settings.
 5. (Optional): If you would like different webhook URLs to receive different sets of notifications, you can instead paste the link into each relevant box in the `Webhook Overrides` section. Note: when a notifier has an override URL, the notifier ignores the primary URL box.
 
 ## Notifiers
@@ -63,64 +63,64 @@ Some notifiers require in-game settings to be configured to send chat messages u
 - Users can choose whether their webhook messages are sent in Discord's rich embed format or a traditional format
 - The player name in Discord rich embeds can be linked to various tracking services (from HiScores to Wise Old Man)
 - Discord rich embed footers can be customized with user-specified text and image url
-- When network issues occur, Dink can make repeated attempts to send the webhook (with exponential backoff)
+- When network issues occur, Veribase can make repeated attempts to send the webhook (with exponential backoff)
 - Notifications can be sent to [Discord Forum Channels](https://support.discord.com/hc/en-us/articles/6208479917079-Forum-Channels-FAQ); append `?forum` to the end of the webhook url to create a new thread per message or use `?thread_id=123456` to post to an existing forum thread (be sure to change `123456` with the actual thread ID)
 - Character [metadata](#metadata) can be sent to custom webhook handlers on login for tracking relevant statistics.
 
 ## Chat Commands
 
-### Export Current Configuration via `::dinkexport`
+### Export Current Configuration via `::veribaseexport`
 
-Dink allows you to export your current plugin configuration to the clipboard via the `::dinkexport` chat command.
+Veribase allows you to export your current plugin configuration to the clipboard via the `::veribaseexport` chat command.
 
 You can share this produced JSON to friends who want to send similarly configured messages.
 
-This export includes settings across all of the notifiers, but omits webhook URLs. If you also want to include webhook URLs in the export, you can use the `all` parameter to the command: `::dinkexport all`.
+This export includes settings across all of the notifiers, but omits webhook URLs. If you also want to include webhook URLs in the export, you can use the `all` parameter to the command: `::veribaseexport all`.
 
-If you _only_ want to export the webhook URLs, run the `::dinkexport webhooks` chat command.
+If you _only_ want to export the webhook URLs, run the `::veribaseexport webhooks` chat command.
 
 You can export just the settings for select notifiers.  
-Simply run: `::dinkexport <notifier section header name without spaces>`.  
-For example: `::dinkexport pet` or `::dinkexport collectionlog`.
+Simply run: `::veribaseexport <notifier section header name without spaces>`.  
+For example: `::veribaseexport pet` or `::veribaseexport collectionlog`.
 
 #### Examples
 
 - Export notifier settings, primary webhook URLs & webhook override URLs  
-  `::dinkexport all`
+  `::veribaseexport all`
 - Export Slayer & BA Gambles Notifier settings  
-  `::dinkexport slayer bagambles`
+  `::veribaseexport slayer bagambles`
 - Export webhook overrides only  
-  `::dinkexport webhookoverrides`
+  `::veribaseexport webhookoverrides`
 - Export all webhooks & the Levels notifier settings:  
-  `::dinkexport webhooks levels`
+  `::veribaseexport webhooks levels`
 
-### Import Configuration via `::dinkimport`
+### Import Configuration via `::veribaseimport`
 
-With the output of the above command (`::dinkexport`) copied to your clipboard, you can merge these settings with your own via the `::dinkimport` chat command.
+With the output of the above command (`::veribaseexport`) copied to your clipboard, you can merge these settings with your own via the `::veribaseimport` chat command.
 
 This import can replace all of your notifier settings.
 However, webhook URL lists, filtered RSNs, and filtered item names for the loot notifier would be combined, rather than outright replaced.
-If you would like all settings overwritten rather than merged during import, simply press the `Reset` button at the bottom of the plugin settings panel to clear out all settings (including URLs) before running `::dinkimport`.
+If you would like all settings overwritten rather than merged during import, simply press the `Reset` button at the bottom of the plugin settings panel to clear out all settings (including URLs) before running `::veribaseimport`.
 
-After an import, if the dink plugin settings panel was open, simply close and open it for the updated configuration to be reflected in the user interface.
+After an import, if the veribase plugin settings panel was open, simply close and open it for the updated configuration to be reflected in the user interface.
 
-Note: There is no undo button for this command, so consider making a backup of your current Dink configuration by using the `::dinkexport all` command explained above and saving that to a file on your computer.
+Note: There is no undo button for this command, so consider making a backup of your current Veribase configuration by using the `::veribaseexport all` command explained above and saving that to a file on your computer.
 
 Warning: If you import override URLs for a notifier (that previously did not have any overrides), this will result in the plugin no longer sending messages from that notifier to your old primary URLs.
 As such, you can manually add your primary URLs to the newly populated override URL boxes so that notifications are still sent to the old primary URLs.
 
-### Get your Dink Hash via `::dinkhash`
+### Get your Veribase Hash via `::veribasehash`
 
-Dink notification metadata includes a player hash that custom webhook servers can utilize to uniquely identify players (persistent across name changes).
+Veribase notification metadata includes a player hash that custom webhook servers can utilize to uniquely identify players (persistent across name changes).
 
-You can obtain your dink hash via the `::dinkhash` chat command. Feel free to provide this value to third-party services that may request it.
+You can obtain your veribase hash via the `::veribasehash` chat command. Feel free to provide this value to third-party services that may request it.
 
-### Get Current Region ID via `::dinkregion`
+### Get Current Region ID via `::veribaseregion`
 
 The death notifier allows you to customize any region that should be ignored.
 This is particularly relevant for ultimate ironmen (UIM) who frequently use particular locations to deathbank/deathpile.
 
-To facilitate this process, the `::dinkregion` chat command outputs the player's current region ID.
+To facilitate this process, the `::veribaseregion` chat command outputs the player's current region ID.
 
 For example, Prifddinas spans the following region IDs: 12894, 12895, 13150, and 13151.
 
@@ -139,9 +139,9 @@ contain some words that will be replaced with in-game values.
 
 `%VALUELOST%` will be replaced with the price of the items you lost. If you died in PvP, `%PKER%` will be replaced with the name of your killer.
 
-By default, to avoid spam, Dink will ignore deaths from the following [safe](https://oldschool.runescape.wiki/w/Minigames#Safe) activities/areas: Barbarian Assault, Castle Wars, Chambers of Xeric (CoX), Clan Wars, Creature Graveyard of Mage Training Arena, Last Man Standing (LMS), Nightmare Zone (NMZ), Pest Control, player-owned houses (POH), Soul Wars, TzHaar Fight Pit.
+By default, to avoid spam, Veribase will ignore deaths from the following [safe](https://oldschool.runescape.wiki/w/Minigames#Safe) activities/areas: Barbarian Assault, Castle Wars, Chambers of Xeric (CoX), Clan Wars, Creature Graveyard of Mage Training Arena, Last Man Standing (LMS), Nightmare Zone (NMZ), Pest Control, player-owned houses (POH), Soul Wars, TzHaar Fight Pit.
 However, PvM deaths as a hardcore group ironman are _not_ considered to be safe (and _will_ trigger a notification in these areas).
-Lastly, Dink makes exceptions for Inferno and TzHaar Fight Cave; deaths in these areas _do_ trigger notifications (despite technically being safe).
+Lastly, Veribase makes exceptions for Inferno and TzHaar Fight Cave; deaths in these areas _do_ trigger notifications (despite technically being safe).
 
 **Note**: If _Distinguish PvP deaths_ is disabled, the message content will be the non-PvP version.
 
@@ -288,11 +288,11 @@ You can customize the message patterns to your liking (`*` is a wildcard), and s
 
 ### Metadata:
 
-On login, Dink can submit a character summary containing data that spans multiple notifiers to a custom webhook handler (configurable in the `Advanced` section). This login notification is delayed by at least 5 seconds in order to gather all of the relevant data.
+On login, Veribase can submit a character summary containing data that spans multiple notifiers to a custom webhook handler (configurable in the `Advanced` section). This login notification is delayed by at least 5 seconds in order to gather all of the relevant data.
 
 ## Credits
 
 This plugin uses code from [Universal Discord Notifier](https://github.com/MidgetJake/UniversalDiscordNotifier).
 
 Item rarity data is sourced from the OSRS Wiki (licensed under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/)),
-which was conveniently parsed by [Flipping Utilities](https://github.com/Flipping-Utilities/parsed-osrs) (and [transformed](https://github.com/pajlads/DinkPlugin/blob/master/src/test/java/dinkplugin/RarityCalculator.java) by pajlads).
+which was conveniently parsed by [Flipping Utilities](https://github.com/Flipping-Utilities/parsed-osrs) (and [transformed](https://github.com/pajlads/VeribasePlugin/blob/master/src/test/java/veribaseplugin/RarityCalculator.java) by pajlads).

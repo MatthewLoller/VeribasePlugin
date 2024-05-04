@@ -1,6 +1,6 @@
 ### Structure
 
-Every Dink `POST` request is a [multipart](https://datatracker.ietf.org/doc/html/rfc2046#section-5.1) body.
+Every Veribase `POST` request is a [multipart](https://datatracker.ietf.org/doc/html/rfc2046#section-5.1) body.
 
 In particular, the `Content-Type` is [`multipart/form-data`](https://datatracker.ietf.org/doc/html/rfc7578) to accomodate the below JSON and optional screenshots in accordance with the [Discord API specification](https://discord.com/developers/docs/reference#uploading-files).
 
@@ -8,7 +8,7 @@ Thus, any third-party consumer should utilize the body entity named `payload_jso
 
 Due to this structure, trying to parse the full `multipart/form-data` as JSON will not succeed until you specifically grab the `payload_json` entity. Competent web frameworks should handle the multipart parsing, so you can easily access the relevant form values.
 
-See [here](https://gitea.ivr.fi/Leppunen/runelite-dink-api/src/branch/master/handlers/dinkHandler.js) for an example project that leverages [`@fastify/multipart`](https://github.com/fastify/fastify-multipart) to read the JSON payload and screenshot file.  
+See [here](https://gitea.ivr.fi/Leppunen/runelite-veribase-api/src/branch/master/handlers/veribaseHandler.js) for an example project that leverages [`@fastify/multipart`](https://github.com/fastify/fastify-multipart) to read the JSON payload and screenshot file.  
 For Express, utilize the [`Multer`](https://github.com/expressjs/multer) middleware.  
 For Golang, utilize the [`ParseMultipartForm`](https://pkg.go.dev/net/http#Request.ParseMultipartForm) function.  
 For http4k, utilize the [`http4k-multipart`](https://www.http4k.org/guide/howto/use_multipart_forms/#lens_typesafe_validating_api_-_reads_all_contents_onto_diskmemory) module.  
@@ -31,7 +31,7 @@ JSON sent with every notification:
   "type": "NOTIFICATION_TYPE",
   "playerName": "your rsn",
   "accountType": "NORMAL | IRONMAN | HARDCORE_IRONMAN",
-  "dinkAccountHash": "abcdefghijklmnopqrstuvwxyz1234abcdefghijklmnopqrstuvwxyz",
+  "veribaseAccountHash": "abcdefghijklmnopqrstuvwxyz1234abcdefghijklmnopqrstuvwxyz",
   "embeds": []
 }
 ```
@@ -40,8 +40,8 @@ JSON sent with every notification but only in certain circumstances:
 
 ```json5
 {
-  "clanName": "Dink QA",
-  "groupIronClanName":"Dink QA",
+  "clanName": "Veribase QA",
+  "groupIronClanName":"Veribase QA",
   "discordUser":{
     "id":"012345678910111213",
     "name":"Gamer",
@@ -53,7 +53,7 @@ JSON sent with every notification but only in certain circumstances:
 `groupIronClanName` is only sent when the player is a GIM and has the advanced setting `Send GIM Clan Name` enabled.  
 The `discordUser` object is only sent when Discord is open and the advanced setting `Send Discord Profile` is enabled.
 
-Note: The examples below omit `playerName`, `accountType`, and `dinkAccountHash` keys because they are always the same.
+Note: The examples below omit `playerName`, `accountType`, and `veribaseAccountHash` keys because they are always the same.
 
 ### Deaths
 
@@ -173,7 +173,7 @@ JSON for Levelups:
   "content": "%USERNAME% has levelled %SKILL%",
   "extra": {
     "levelledSkills": {
-      // These are the skills that dinked
+      // These are the skills that veribaseed
       "Skill name": 30
     },
     "allSkills": {
