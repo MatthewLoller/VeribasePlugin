@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.runelite.client.discord.DiscordService;
 import okhttp3.*;
+import veribaseplugin.VeribasePlugin;
 import veribaseplugin.VeribasePluginConfig;
 import veribaseplugin.domain.AccountType;
 import lombok.experimental.UtilityClass;
@@ -304,7 +305,7 @@ public class Utils {
      *
      * @param l the long to hash
      */
-    public CompletableFuture<Void> sendVeribaseHash(@NotNull Client client, @NotNull long l, @NotNull String discordId) {
+    public CompletableFuture<Void> sendVeribaseHash(@NotNull Client client, @NotNull long l, @NotNull String discordId, @NotNull VeribasePlugin plugin) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         String hash = veribaseHash(l);
         if (hash == null) {
@@ -336,7 +337,22 @@ public class Utils {
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 try {
                     if (response.isSuccessful()) {
-                        log.info("Successfully sent hash to server");
+                        String responseBody = response.body().string(); // Get the response body as a string
+                        VeribaseInitResponse jsonResponse = new Gson().fromJson(responseBody, VeribaseInitResponse.class); // Parse the response body to JSON
+                        String status = jsonResponse.getStatus();
+
+                        log.info("here is my status " + status);
+
+                        if ("initialized".equals(status)) {
+                            log.info("User successfully registered");
+                            plugin.addChatSuccess("Character successfully registered with Veribase.");
+                        } else if ("already_initialized".equals(status)) {
+                            log.info("User already registered");
+                            plugin.addChatSuccess("Character is already registered with Veribase.");
+                        } else {
+                            log.warn("Unknown status received: " + status);
+                        }
+
                         future.complete(null); // Successfully completed the future
                     } else {
                         log.warn("Server responded with error: " + response.code() + " " + response.body().toString());
@@ -368,6 +384,21 @@ public class Utils {
             this.playerName = playerName;
             this.accountType = accountType;
             this.discordId = discordId;
+        }
+    }
+
+    private class VeribaseInitResponse {
+        private String status;
+        private String message;
+
+        // Getter for the status field
+        public String getStatus() {
+            return status;
+        }
+
+        // Getter for the message field
+        public String getMessage() {
+            return message;
         }
     }
 

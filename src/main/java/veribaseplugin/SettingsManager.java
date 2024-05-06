@@ -148,9 +148,8 @@ public class SettingsManager {
 
             String discordId = discordService.getCurrentUser().userId;
 
-            Utils.sendVeribaseHash(client, accountHash, discordId)
+            Utils.sendVeribaseHash(client, accountHash, discordId, plugin)
                 .thenRun(() -> {
-                    plugin.addChatSuccess("Character successfully initialized with Veribase.");
                     CompletableFuture.completedFuture(client.getAccountHash())
                         .thenApplyAsync(Utils::veribaseHash)
                         .thenCompose(Utils::copyToClipboard)
