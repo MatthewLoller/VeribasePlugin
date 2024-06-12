@@ -321,7 +321,7 @@ public class Utils {
 
         // Build the POST request
         Request request = new Request.Builder()
-            .url("https://lnjk3xi3s5.execute-api.us-east-1.amazonaws.com/prod/veribase-init")
+            .url("https://vhgle12tn7.execute-api.us-east-1.amazonaws.com/prod/veribase-init")
             .post(body)
             .build();
 
@@ -370,6 +370,68 @@ public class Utils {
         return future;
     }
 
+    public CompletableFuture<Void> wipeVeribaseHash(@NotNull Client client, @NotNull long l, @NotNull String discordId, @NotNull VeribasePlugin plugin) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        String hash = veribaseHash(l);
+        if (hash == null) {
+            future.completeExceptionally(new IllegalStateException("Hash computation failed"));
+            return future;
+        }
+
+        // Create JSON payload
+        String jsonPayload = gson.toJson(new VeribasePayload(hash, discordId, getPlayerName(client), getAccountType(client).toString()));
+
+        // Create request body
+        RequestBody body = RequestBody.create(MediaType.get("application/json"), jsonPayload);
+
+        // Build the POST request
+        Request request = new Request.Builder()
+            .url("https://vhgle12tn7.execute-api.us-east-1.amazonaws.com/prod/veribase-wipe")
+            .post(body)
+            .build();
+
+        // Asynchronously send the POST request
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                log.error("Failed to send veribase hash due to network error", e);
+                future.completeExceptionally(e); // Complete exceptionally on network errors
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                try {
+                    if (response.isSuccessful()) {
+                        String responseBody = response.body().string(); // Get the response body as a string
+                        VeribaseWipeResponse jsonResponse = new Gson().fromJson(responseBody, VeribaseWipeResponse.class); // Parse the response body to JSON
+
+                        if (jsonResponse.hasSuccess()) {
+                            log.info("successful deletion");
+                            plugin.addChatSuccess(jsonResponse.getSuccessMessage());
+                        }
+
+                        if (jsonResponse.hasFailures()) {
+                            log.info("error deletion");
+                            plugin.addChatWarning(jsonResponse.getFailureMessage());
+                        }
+
+                        future.complete(null); // Successfully completed the future
+                    } else {
+                        log.warn("Server responded with error: " + response.code() + " " + response.body().toString());
+                        future.completeExceptionally(new IOException("HTTP Error: " + response.code() + " " + response.message()));
+                    }
+                } catch (Exception e) {
+                    log.error("Failed processing the HTTP response", e);
+                    future.completeExceptionally(e); // Complete exceptionally for any exception caught during processing
+                } finally {
+                    response.close(); // Ensure the response is closed in all cases
+                }
+            }
+        });
+
+        return future;
+    }
+
     /**
      * Helper class for JSON payload.
      */
@@ -399,6 +461,33 @@ public class Utils {
         // Getter for the message field
         public String getMessage() {
             return message;
+        }
+    }
+
+    private class VeribaseWipeResponse {
+        private String status;
+        private String success;
+        private String failure;
+        private boolean hasSuccess;
+        private boolean hasFailures;
+
+        // Getter for the status field
+        public String getStatus() {
+            return status;
+        }
+
+        // Getter for the message field
+        public String getSuccessMessage() {
+            return success;
+        }
+        public String getFailureMessage() {
+            return failure;
+        }
+        public boolean hasSuccess() {
+            return hasSuccess;
+        }
+        public boolean hasFailures() {
+            return hasFailures;
         }
     }
 

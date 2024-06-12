@@ -23,7 +23,7 @@ import java.util.Set;
 @ConfigGroup(SettingsManager.CONFIG_GROUP)
 public interface VeribasePluginConfig extends Config {
 
-    String veribaseApiUrl = "https://lnjk3xi3s5.execute-api.us-east-1.amazonaws.com/prod/secured/?discordId=133789758760550400";
+    String veribaseApiUrl = "https://vhgle12tn7.execute-api.us-east-1.amazonaws.com/prod/secured/?discordId=133789758760550400";
 //
 //    @ConfigSection(
 //        name = "Webhook Overrides",

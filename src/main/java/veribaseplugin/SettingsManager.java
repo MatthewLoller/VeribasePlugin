@@ -163,6 +163,22 @@ public class SettingsManager {
                     plugin.addChatWarning("Error when trying to init your character.");
                     return null;
                 });
+        } else if ("VeribaseWipe".equalsIgnoreCase(cmd)) {
+            long accountHash = client.getAccountHash();
+
+            String discordId = discordService.getCurrentUser().userId;
+
+            Utils.wipeVeribaseHash(client, accountHash, discordId, plugin)
+                .thenRun(() -> {
+                    CompletableFuture.completedFuture(client.getAccountHash())
+                        .exceptionally(t -> {
+                            return null;
+                        });
+                })
+                .exceptionally(t -> {
+                    plugin.addChatWarning("Error when trying to delete your character information from Veribase.");
+                    return null;
+                });
         }
     }
 
